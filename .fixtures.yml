@@ -3,4 +3,12 @@
 ---
 fixtures:
   forge_modules:
-#     stdlib: "puppetlabs/stdlib"
+    stdlib:
+      repo: puppetlabs/stdlib
+      ref: 4.25.1
+    firewall:
+      repo: puppetlabs/firewall
+      ref: 1.12.0
+    firewalld:
+      repo: crayfishx/firewalld
+      ref: 3.4.0

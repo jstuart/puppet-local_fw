@@ -6,9 +6,22 @@
 #   include local_fw::params
 class local_fw::params inherits local_fw::globals {
 
-  $enable = $local_fw::globals::ensure ? {
+  $_ensure = $local_fw::globals::ensure
+  $_enable = $_ensure ? {
     'running' => true,
-    'stopped' => false,
+    default   => false,
+  }
+
+
+  $_ensure_ipv6 = $local_fw::globals::ensure_ipv6 ? {
+    'auto'  => $::local_fw_ipv6_enabled ? {
+      true    => 'running',
+      default => 'stopped',
+    },
+    default => $local_fw::globals::ensure_ipv6 ,
+  }
+  $_enable_ipv6 = $_ensure_ipv6 ? {
+    'running' => true,
     default   => false,
   }
 

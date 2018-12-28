@@ -1,9 +1,12 @@
 require 'spec_helper'
 
 describe 'local_fw::rule' do
-  let(:title) { 'namevar' }
+  let(:title) { 'allow all' }
   let(:params) do
-    {}
+    {
+      action: 'accept',
+      proto:  'all',
+    }
   end
 
   on_supported_os.each do |os, os_facts|

@@ -3,7 +3,7 @@
 #
 # @summary Abstraction of a local firewall rule
 #
-# FIXME: this really needs additional options like source to 
+# FIXME: this really needs additional options like source to
 # be useful.
 #
 # @example
@@ -67,12 +67,12 @@ define local_fw::rule(
 ) {
   include local_fw::params
 
-  if $local_fw::globals::manage_firewall {
+  if $local_fw::globals::manage_firewall and $local_fw::params::_ensure != 'stopped' {
     if $port {
       if $proto =~ Array {
         $proto.each |String $p| {
           if $p != 'tcp' and $p != 'udp' and $p != 'all' {
-            fail("Proto is required and must be tcp, udp, or all, for rules in which a port is specified. The current value is an array that contains: '${p}'.")
+            fail("Proto is required and must be tcp, udp, or all, for rules in which a port is specified. The current value is an array that contains: '${p}'.") # lint:ignore:140chars
           }
         }
       } else {
@@ -101,7 +101,7 @@ define local_fw::rule(
         if $ensure == 'absent' {
           if $proto {
             $_protos.each |String $_proto| {
-              firewall { "${order} ${name} - $_proto":
+              firewall { "${order} ${name} - ${_proto}":
                 ensure => 'absent',
               }
             }
@@ -111,9 +111,12 @@ define local_fw::rule(
             }
           }
         } else {
+          include local_fw::iptables::pre
+          include local_fw::iptables::post
+
           if $proto {
             $_protos.each |String $_proto| {
-              firewall { "${order} ${name} - $_proto":
+              firewall { "${order} ${name} - ${_proto}":
                 ensure  => 'present',
                 dport   => $port,
                 proto   => $_proto,
@@ -141,14 +144,14 @@ define local_fw::rule(
           if $port {
             $_mapped = $_protos.each |Any $_proto| {
               $_ports.each |Any $_port| {
-                firewalld_rich_rule { "${order} ${name} - $_port/$_proto":
+                firewalld_rich_rule { "${order} ${name} - ${_port}/${_proto}":
                   ensure =>  'absent',
                 }
               }
             }
           } elsif $proto {
             $_filters = $_protos.each |Any $_proto| {
-              firewalld_rich_rule { "${order} ${name} - $_proto":
+              firewalld_rich_rule { "${order} ${name} - ${_proto}":
                 ensure => 'absent',
               }
             }
@@ -171,7 +174,7 @@ define local_fw::rule(
             $_mapped = $_protos.map |Any $_proto| {
               $_ports.map |Any $_port| {
                 {
-                  "${order} ${name} - $_port/$_proto" => {
+                  "${order} ${name} - ${_port}/${_proto}" => {
                     'port' => {
                       'port'     => $_port,
                       'protocol' => $_proto,
@@ -192,7 +195,7 @@ define local_fw::rule(
             # Get an array of filter hashes
             $_filters = $_protos.map |Any $_proto| {
               {
-                "${order} ${name} - $_proto" => {
+                "${order} ${name} - ${_proto}" => {
                   'protocol' => $proto,
                 }
               }

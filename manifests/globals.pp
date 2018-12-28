@@ -18,6 +18,8 @@ class local_fw::globals (
   # Should the firewall be stopped or running?
   Enum['running', 'stopped'] $ensure = 'running',
 
+  Enum['running', 'stopped', 'auto'] $ensure_ipv6 = 'auto',
+
   # Should all unmanaged rules be purged?
   Boolean $purge_rules = true,
 
