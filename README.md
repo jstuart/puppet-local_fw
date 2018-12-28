@@ -1,15 +1,7 @@
+# Wrapper Module for iptables and firewalld Firewalls
 
-# local_fw
-
-Welcome to your new module. A short overview of the generated parts can be found in the PDK documentation at https://puppet.com/pdk/latest/pdk_generating_modules.html .
-
-The README template below provides a starting point with details about what information to include in your README.
-
-
-
-
-
-
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/jstuart/puppet-local_fw.svg?branch=master)](https://travis-ci.org/jstuart/puppet-local_fw)
 
 #### Table of Contents
 
@@ -17,79 +9,45 @@ The README template below provides a starting point with details about what info
 2. [Setup - The basics of getting started with local_fw](#setup)
     * [What local_fw affects](#what-local_fw-affects)
     * [Setup requirements](#setup-requirements)
-    * [Beginning with local_fw](#beginning-with-local_fw)
 3. [Usage - Configuration options and additional functionality](#usage)
 4. [Limitations - OS compatibility, etc.](#limitations)
 5. [Development - Guide for contributing to the module](#development)
 
 ## Description
 
-Briefly tell users why they might want to use your module. Explain what your module does and what kind of problems users can solve with it.
+This module wraps the [firewall](https://forge.puppet.com/puppetlabs/firewall) and [firewalld](https://forge.puppet.com/crayfishx/firewalld) Puppet modules, abstracting the type of firewall running on the system.
 
-This should be a fairly short description helps the user decide if your module is what they want.
-
+The goal is to allow other modules to specify the firewall rule they require, and let this module worry about the specifics of getting it setup.
 
 ## Setup
 
-### What local_fw affects **OPTIONAL**
+### What local_fw affects
 
-If it's obvious what your module touches, you can skip this section. For example, folks can probably figure out that your mysql_instance module affects their MySQL instances.
+This module can manage the following firewall types on EL6 and EL7 platforms
 
-If there's more that they should know about, though, this is the place to mention:
+* iptables (via [firewall](https://forge.puppet.com/puppetlabs/firewall) on EL6 and EL7)
+* firewalld (via [firewalld](https://forge.puppet.com/crayfishx/firewalld) on EL7)
 
-* Files, packages, services, or operations that the module will alter, impact, or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
+### Setup Requirements
 
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled, another module, etc.), mention it here.
-
-If your most recent release breaks compatibility or requires particular steps for upgrading, you might want to include an additional "Upgrading" section here.
-
-### Beginning with local_fw
-
-The very basic steps needed for a user to get the module up and running. This can include setup steps, if necessary, or it can be an example of the most basic use of the module.
+This module requires the following modules:
+* The [stdlib](https://forge.puppetlabs.com/puppetlabs/stdlib) Puppet library (4.25.1+).
+* The [firewall](https://forge.puppet.com/puppetlabs/firewall) Puppet library for the management of iptables (optional if not using iptables).
+* The [firewalld](https://forge.puppet.com/crayfishx/firewalld) Puppet library for the management of firewalld on EL7 (optional if not using firewalld).
 
 ## Usage
 
-Include usage examples for common use cases in the **Usage** section. Show your users how to use your module to solve problems, and be sure to include code examples. Include three to five examples of the most important or common tasks a user can accomplish with your module. Show users how to accomplish more complex tasks that involve different types, classes, and functions working in tandem.
-
-## Reference
-
-This section is deprecated. Instead, add reference information to your code as Puppet Strings comments, and then use Strings to generate a REFERENCE.md in your module. For details on how to add code comments and generate documentation with Strings, see the Puppet Strings [documentation](https://puppet.com/docs/puppet/latest/puppet_strings.html) and [style guide](https://puppet.com/docs/puppet/latest/puppet_strings_style.html)
-
-If you aren't ready to use Strings yet, manually create a REFERENCE.md in the root of your module directory and list out each of your module's classes, defined types, facts, functions, Puppet tasks, task plans, and resource types and providers, along with the parameters for each.
-
-For each element (class, defined type, function, and so on), list:
-
-  * The data type, if applicable.
-  * A description of what the element does.
-  * Valid values, if the data type doesn't make it obvious.
-  * Default value, if any.
-
-For example:
-
-```
-### `pet::cat`
-
-#### Parameters
-
-##### `meow`
-
-Enables vocalization in your cat. Valid options: 'string'.
-
-Default: 'medium-loud'.
-```
+Configuration options are all provided in the `local_fw::globals` class.  Including the `local_fw` class will cause the actual management to occur.
 
 ## Limitations
 
-In the Limitations section, list any incompatibilities, known issues, or other warnings.
+This module is REALLY basic and at this point only supports rules the consist of an action (e.g. accept, reject), a protocol, and optionally a port.  IPV6 support is limited to turning iptables on or off based on system support for IPV6 and an optionally specified target state.
+
+Unit testing is really just limited to compilation at this point.
 
 ## Development
 
-In the Development section, tell other users the ground rules for contributing to your project and how they should submit their work.
-
+Please feel free to submit issues or contribute.
 
 ## License
 
@@ -103,6 +61,3 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-## Release Notes/Contributors/Etc. **Optional**
-
-If you aren't using changelog, put your release notes here (though you should consider using changelog). You can also add any additional sections you feel are necessary or important to include here. Please use the `## ` header.
