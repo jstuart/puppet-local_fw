@@ -208,7 +208,7 @@ define local_fw::rule(
           }
 
           $_filters.each |Hash $_filter| {
-            create_resources ( 
+            create_resources (
               firewalld_rich_rule,
               $_filter,
               {
