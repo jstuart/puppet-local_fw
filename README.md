@@ -1,6 +1,6 @@
 # Wrapper Module for iptables and firewalld Firewalls
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/jstuart/puppet-local_fw/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/jstuart/puppet-local_fw.svg?branch=master)](https://travis-ci.org/jstuart/puppet-local_fw)
 
 #### Table of Contents
